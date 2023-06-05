@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "171914262639",
+    "firebase_url": "https://museumr-72dd0-default-rtdb.firebaseio.com",
+    "project_id": "museumr-72dd0",
+    "storage_bucket": "museumr-72dd0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:171914262639:android:b45be7a0d98ccfac95759a",
+        "android_client_info": {
+          "package_name": "com.kv28.firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "171914262639-v1h39nbehvjo98h66311b1v78u30ujgc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkxAhY2RF07rWzs0n9NFOLr_N2WJgYVrg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "171914262639-v1h39nbehvjo98h66311b1v78u30ujgc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
