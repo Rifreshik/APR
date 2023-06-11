@@ -5,7 +5,10 @@ using UnityEngine.UI;
 
 public class ButtonController : MonoBehaviour
 {
+
    public InputField input;
+   public InputField name2;
+
    private DB db;
 
    void Start()
@@ -22,5 +25,25 @@ public class ButtonController : MonoBehaviour
    {
      db.changeage(input.text);
    }
+   public void SaveDataB()
+   {
+     db.SaveData(name2.text);
+   }
+   
+    public void changeProductF()
+   {
+     db.changeProductF(input.text);
+   }
+   
+    public void changeProductC()
+   {
+     db.changeProductC(input.text);
+   }
+    public void AllUsers()
+   {
+      StartCoroutine(db.GetLeaders());
+   }
+
+
 
 }
