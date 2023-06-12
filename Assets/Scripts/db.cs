@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using System;
 
 public class DB : MonoBehaviour
 {
@@ -32,23 +33,23 @@ public class DB : MonoBehaviour
         
     }
 
-    public void SignIn()
-    {
-        string email = emailInput.text;
-        string password = passwordInput.text;
+   public async void SignIn()
+{
+    string email = emailInput.text;
+    string password = passwordInput.text;
 
-        auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
-        {
-            if (task.IsCompleted && !task.IsCanceled && !task.IsFaulted)
-            {
-                changeScene();
-            }
-            else
-            {
-                Debug.LogError(task.Exception);
-            }
-        });
+    try
+    {
+        await auth.SignInWithEmailAndPasswordAsync(email, password);
+        
+        login.SetActive(false);
+        Main.SetActive(true);
     }
+    catch (Exception e)
+    {
+        Debug.LogError(e.Message);
+    }
+}
 
     public void SaveData(string str)
     {
@@ -226,14 +227,7 @@ public IEnumerator GetLeaders()
     Debug.Log("Выполнение функции GetLeaders завершено.");
 }
 
-public void changeScene()
-{
-    
-    login.SetActive(false );
-                Main.SetActive(true);
-         SceneManager.LoadScene("login");
 
-}
 
 }
   

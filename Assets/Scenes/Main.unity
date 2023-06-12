@@ -2928,8 +2928,8 @@ RectTransform:
   - {fileID: 1845587286}
   - {fileID: 1899620126}
   - {fileID: 1241741583}
-  - {fileID: 1690686440}
   - {fileID: 1286120946}
+  - {fileID: 1690686440}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
