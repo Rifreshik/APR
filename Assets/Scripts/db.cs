@@ -7,17 +7,18 @@ using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.SceneManagement;
 using System;
+using System.Threading.Tasks;
 
 public class DB : MonoBehaviour
 {
     DatabaseReference dbRef;
     FirebaseAuth auth;
     FirebaseApp app;
-    public Text text;
     public InputField input;
     public InputField ProductFI;
     public InputField ProductCI;
     [SerializeField] Text TextLeaders;
+     [SerializeField] Text Result;
 
     
 
@@ -28,8 +29,14 @@ public class DB : MonoBehaviour
 
     void Start()
     {
-        dbRef = FirebaseDatabase.DefaultInstance.RootReference;
-        auth = FirebaseAuth.DefaultInstance;
+       app = FirebaseApp.DefaultInstance;
+        auth = FirebaseAuth.GetAuth(app);
+    if (auth == null)
+    {
+        Debug.LogError("Could not get Firebase auth instance.");
+        return;
+    }
+    dbRef = FirebaseDatabase.DefaultInstance.RootReference;
         
     }
 
@@ -80,27 +87,26 @@ public class DB : MonoBehaviour
             this.ProductF = ProductC;
         }
     }
-
-    public IEnumerator LoadData(string str)
+public IEnumerator LoadData(string str)
+{
+    var user = dbRef.Child("users").Child(str).GetValueAsync();
+    yield return new WaitUntil(predicate: ()  =>user.IsCompleted);
+    if (user.Exception != null)
     {
-        var user = dbRef.Child("users").Child(str).GetValueAsync();
-
-        yield return new WaitUntil(predicate: () => user.IsCompleted);
-
-        if (user.Exception != null)
-        {
-            Debug.LogError(user.Exception);
-        }
-        else if (user.Result == null)
-        {
-            Debug.LogError("Нету такого пользователя ");
-        }
-        else
-        {
-            DataSnapshot snapshot = user.Result;
-            text.text = snapshot.Child("age").Value.ToString() + " " + snapshot.Child("name").Value.ToString();
-        }
+        Debug.LogError(user.Exception);
     }
+    else if (user.Result == null)
+    {
+        Debug.Log("Null");
+    }
+    else 
+    {
+        DataSnapshot snapshot = user.Result;
+        Result.text = snapshot.Child("Age").Value.ToString();
+Result.text += snapshot.Child("Firstname").Value.ToString();
+    }
+}
+
 
     public void changeage(string str)
     {
@@ -196,39 +202,40 @@ public class DB : MonoBehaviour
             }
         }); 
     }
-public IEnumerator GetLeaders()
-{
-    Debug.Log("Начинаю выполнение функции GetLeaders.");
-
-    var leaders = dbRef.Child("users").OrderByChild("age").GetValueAsync();
-
-    yield return new WaitUntil(predicate: () => leaders.IsCompleted);
-
-    if (leaders.Exception != null)
+    public IEnumerator GetLeaders()
     {
-        Debug.LogError("Ошибка при получении данных о лидерах!");
-    }
-    else if (leaders.Result.Value == null)
-    {
-        Debug.LogError("Данные о лидерах не найдены!");
-    }
-    else
-    {
-        DataSnapshot snapshot = leaders.Result;
-        foreach (DataSnapshot dataChildSnapshot in snapshot.Children.Reverse())
+        Debug.Log("Начинаю выполнение функции GetLeaders.");
+
+        var leaders = dbRef.Child("users").OrderByChild("Age").GetValueAsync();
+
+        yield return new WaitUntil(predicate: () => leaders.IsCompleted);
+
+        if (leaders.Exception != null)
         {
-            string name = dataChildSnapshot.Child("name").Value.ToString();
-            string age = dataChildSnapshot.Child("age").Value.ToString();
-            Debug.Log($"Добавляю запись: {name}:{age}");
-            TextLeaders.text += "\n" + name + ":" + age;
+            Debug.LogError("Ошибка при получении данных о лидерах!");
         }
+       else if (!leaders.Result.Exists || leaders.Result.ChildrenCount == 0)
+{
+    Debug.LogError("Данные о лидерах не найдены!");
+}
+        else if (TextLeaders != null)
+        {
+            DataSnapshot snapshot = leaders.Result;
+            foreach (DataSnapshot dataChildSnapshot in snapshot.Children.Reverse())
+            {
+                string name = dataChildSnapshot.Child("Firstname").Value.ToString();
+                string age = dataChildSnapshot.Child("Age").Value.ToString();
+                Debug.Log($"Добавляю запись: {name}:{age}");
+             if (TextLeaders != null)
+                {
+                    TextLeaders.text += "\n" + name + ":" + age;
+                }
+        }
+
+        Debug.Log("Выполнение функции GetLeaders завершено.");
     }
 
-    Debug.Log("Выполнение функции GetLeaders завершено.");
+    }
 }
 
-
-
-}
-  
 
